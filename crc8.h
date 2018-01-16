@@ -1,22 +1,24 @@
+#ifndef CRC8_H
+#define CRC8_H
+
 #include <stddef.h>
 #include <stdint.h>
 
+/*
+ * Algorithm parameters taken from http://reveng.sourceforge.net/crc-catalogue/all.htm
+ */
 #define CRC8_POLY            0x07
 #define CRC8_INIT            0x00
 #define CRC8_XOROUT          0x00
-
 #define CRC8_CDMA2000_POLY   0x9B
 #define CRC8_CDMA2000_INIT   0xFF
 #define CRC8_CDMA2000_XOROUT 0x00
-
 #define CRC8_DVBS2_POLY      0xD5
 #define CRC8_DVBS2_INIT      0x00
 #define CRC8_DVBS2_XOROUT    0x00
-
 #define CRC8_ITU_POLY        0x07
 #define CRC8_ITU_INIT        0x00
 #define CRC8_ITU_XOROUT      0x55
-
 #define CRC8_LTE_POLY        0x9B
 #define CRC8_LTE_INIT        0x00
 #define CRC8_LTE_XOROUT      0x00
@@ -90,3 +92,5 @@ uint8_t crc8_itu(uint8_t *msg, size_t len) {
 uint8_t crc8_lte(uint8_t *msg, size_t len) {
     return __crc8(msg, len, CRC8_LTE_POLY, CRC8_LTE_INIT, CRC8_LTE_XOROUT);
 }
+
+#endif // CRC8_H
