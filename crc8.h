@@ -28,11 +28,30 @@ static uint8_t reverse8(uint8_t x) {
 static uint8_t __crc8(uint8_t *msg, size_t len, uint8_t poly, uint8_t init, uint8_t xorout) {
     uint8_t ret = init;
 
+#ifndef CRC8_USE_LOOKUP_TABLE
     for (int i = 0; i < len; ++i) {
 	ret ^= *(msg+i);
 	for (int j = 0; j < 8; ++j)
 	    ret = ((ret & 0x80) != 0) ? ((ret << 1) ^ poly) : ret << 1;
     }
+#else
+    static uint8_t table[256] = { 0 };
+    uint8_t temp;
+
+    if (table[1] == 0) {
+	for (int i = 0; i < 256; ++i) {
+	    temp = (uint8_t) i;
+	    
+	    for (int j = 0; j < 8; ++j)
+		temp = ((temp & 0x80) != 0) ? ((temp << 1) ^ poly) : temp << 1;
+
+	    table[i] = temp;
+	}
+    }
+
+    for (int i = 0; i < len; ++i)
+	ret = table[*(msg+i) ^ ret];
+#endif // CRC8_USE_LOOKUP_TABLE
 
     return ret ^ xorout;
 }
