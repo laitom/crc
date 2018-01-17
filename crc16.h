@@ -48,7 +48,7 @@ static uint16_t __crc16(uint8_t *msg, size_t len, uint16_t poly, uint16_t init, 
 	    ret = ((ret & 0x8000) != 0) ? ((ret << 1) ^ poly) : ret << 1;
     }
 #else
-    uint16_t table[256] = { 0 };
+    static uint16_t table[256] = { 0 };
     uint16_t temp;
 
     if (table[1] == 0) {
@@ -62,9 +62,8 @@ static uint16_t __crc16(uint8_t *msg, size_t len, uint16_t poly, uint16_t init, 
 	}
     }
 
-    for (int i = 0; i < len; ++i) {
+    for (int i = 0; i < len; ++i)
 	ret = (ret << 8) ^ table[(ret >> 8) ^ *(msg+i)];
-    }
 #endif
 
     return ret ^ xorout;
